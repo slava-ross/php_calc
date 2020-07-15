@@ -1,0 +1,29 @@
+body {
+	background: lightgrey;
+	font-family: "Arial", sans-serif;
+	font-size: 14px;
+	line-height: 1.4;
+	margin: 0;
+	padding: 10;
+}
+
+h2,h3 {
+	text-align: center;
+}
+
+header {
+	display: flex;
+	background-color: darkgray;
+	margin: 0px auto 0px;
+}
+
+header img {
+    height: 60px;
+	width: 60px;
+}
+
+main {
+	display: flex;
+	width: 100%;
+	margin: 0 auto;
+}
