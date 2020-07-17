@@ -8,18 +8,86 @@
     <body>
         <h2>Калькулятор</h2>
         <div class="calc_form">
+
+            <?php
+                if (isset($_POST['submit'])) {
+                    $operand1 = trim($_POST['operand1']);
+                    $operand2 = trim($_POST['operand2']);
+                    $operation = isset($_POST['operation']) ? $_POST['operation'] : '';
+
+                    function doOperation($arg1, $arg2, $oper) {
+                        switch ($oper) {
+                            case 'add':
+                                return $arg1 + $arg2;
+                            case 'sub':
+                                return $arg1 - $arg2;
+                            case 'mul':
+                                return $arg1 * $arg2;
+                            case 'div':
+                                if (!$arg2) {
+                                    return NULL;
+                                }
+                                else {
+                                    return $arg1 / $arg2;
+                                }
+                            case 'mod':
+                                if (!$arg2) {
+                                    return NULL;
+                                }
+                                else {
+                                    return $arg1 % $arg2;
+                                }
+                            case 'pwr':
+                                return $arg1 ** $arg2;
+                        }
+                    }
+
+                    $errors = array();
+
+                    if (empty($operand1) && !is_numeric($operand1)) {
+                        $errors[] = "Отсутствует операнд 1!";
+                    }
+                    elseif (!preg_match("|^[-]?[\d]*[\.]?[\d]*$|", $operand1)) {
+                        $errors[] = "Неверный формат операнда 1! ([-]d[.d])";
+                    }
+                    if (empty($operand2) && !is_numeric($operand2)) {
+                        $errors[] = "Отсутствует операнд 2!";
+                    }
+                    elseif (!preg_match("|^[-]?[\d]*[\.]?[\d]*$|", $operand2)) {
+                        $errors[] = "Неверный формат операнда 2! ([-]d[.d])";
+                    }
+
+                    if(empty($operation)) {
+                        $errors[] = "Не указана операция!";
+                    }
+                    if (count($errors) === 0) {
+                        $result = doOperation($operand1, $operand2, $operation);
+                        $display = ($result === NULL) ? "Divider is zero!" : $result;
+                    }
+                    else {
+                        foreach ( $errors as $errorMsg ) {
+                            print('<p class="message error">'.$errorMsg.'</p>');
+                        }
+                    }
+                }
+            ?>
+
             <form method="post">
-                <p class="operands">
-                    <label><b>Операнд 1:</b><br>
+                <p class="message result"><?php echo (isset($display)) ? "$display" : "0" ?></p>
+                <p>
+                    <label>
+                        <b>Операнд 1:</b><br>
                         <input type="text" name="operand1" placeholder="Введите первый операнд" value="<?php if(isset($_POST['operand1'])) print $_POST['operand1'] ?>">
                     </label>
                 </p>
-                <p class="operands">
-                    <label><b>Операнд 2:</b><br>
+                <p>
+                    <label>
+                        <b>Операнд 2:</b><br>
                         <input type="text" name="operand2" placeholder="Введите второй операнд" value="<?php if(isset( $_POST['operand2'])) print $_POST['operand2'] ?>">
                     </label>
                 </p>
-                <p><b>Операция:</b><br>
+                <p>
+                    <b>Операция:</b><br>
                     <label>
                         <input type="radio" name="operation" value="add"
                             <?php
@@ -88,65 +156,9 @@
                     </label><br>
                 </p>
                 <p><input type="submit" name="submit" value="Вычислить"></p>
-                <!--input type="button" onclick="document.getElementById('myForm').reset()" value="reset"-->
-                <input type="reset" name="reset" value="Сброс">
+                <!--p><input type="button" onclick="document.getElementById('myForm').reset()" value="reset"></p-->
+                <p><input type="reset" name="reset" value="Сброс"></p>
             </form>
-
-            <?php
-                if (isset($_POST['submit'])) {
-                    $operand1 = trim($_POST['operand1']);
-                    $operand2 = trim($_POST['operand2']);
-                    $operation = isset($_POST['operation']) ? $_POST['operation'] : "";
-
-                    function doOperation($arg1, $arg2, $oper) {
-                        switch ($oper) {
-                            case 'add':
-                                return $arg1 + $arg2;
-                            case 'sub':
-                                return $arg1 - $arg2;
-                            case 'mul':
-                                return $arg1 * $arg2;
-                            case 'div':
-                                if (!$arg2) {
-                                    return NULL;
-                                }
-                                else {
-                                    return $arg1 / $arg2;
-                                }
-                            case 'mod':
-                                if (!$arg2) {
-                                    return NULL;
-                                }
-                                else {
-                                    return $arg1 % $arg2;
-                                }
-                            case 'pwr':
-                                return $arg1 ** $arg2;
-                        }
-                    }
-
-                    $errors = array();
-
-                    if (empty($operand1)) {
-                        $errors[] = "Отсутствует первый операнд!";
-                    }
-                    if (empty($operand2)) {
-                        $errors[] = "Отсутствует второй операнд!";
-                    }
-                    if(empty($operation)) {
-                        $errors[] = "Не указана операция!";
-                    }
-                    if (count($errors) === 0) {
-                        $result = doOperation($operand1, $operand2, $operation);
-                        echo ($result === NULL) ? "Divider is zero!\n" : "<p class=\"message\">Результат: $result</p>";
-                    }
-                    else {
-                        foreach ( $errors as $errorMsg ) {
-                            print('<p class="message error">'.$errorMsg.'</p>');
-                        }
-                    }
-                }
-            ?>
-    </div>
+        </div>
     </body>
 </html>

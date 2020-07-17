@@ -44,14 +44,13 @@
 
                     $errors = array();
 
-                    if (empty($operand1)) {
+                    if (empty($operand1) && !is_numeric($operand1)) {
                         $errors[] = "Отсутствует операнд 1!";
                     }
                     elseif (!preg_match("|^[-]?[\d]*[\.]?[\d]*$|", $operand1)) {
                         $errors[] = "Неверный формат операнда 1! ([-]d[.d])";
                     }
-
-                    if (empty($operand2)) {
+                    if (empty($operand2) && !is_numeric($operand2)) {
                         $errors[] = "Отсутствует операнд 2!";
                     }
                     elseif (!preg_match("|^[-]?[\d]*[\.]?[\d]*$|", $operand2)) {
@@ -75,13 +74,13 @@
 
             <form method="post">
                 <p class="message result"><?php echo (isset($display)) ? "$display" : "0" ?></p>
-                <p class="operands">
+                <p>
                     <label>
                         <b>Операнд 1:</b><br>
                         <input type="text" name="operand1" placeholder="Введите первый операнд">
                     </label>
                 </p>
-                <p class="operands">
+                <p>
                     <label>
                         <b>Операнд 2:</b><br>
                         <input type="text" name="operand2" placeholder="Введите второй операнд">
